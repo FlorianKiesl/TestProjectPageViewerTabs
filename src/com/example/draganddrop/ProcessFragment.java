@@ -1,8 +1,10 @@
 package com.example.draganddrop;
 
 
+
 import com.example.testprojectprocesstabs.R;
 
+import android.opengl.Visibility;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.ClipData;
@@ -17,7 +19,9 @@ import android.view.View.OnDragListener;
 import android.view.View.OnTouchListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 
 public class ProcessFragment extends Fragment {
 
@@ -25,33 +29,45 @@ public class ProcessFragment extends Fragment {
 			MSGCARD = "MSGCARD", TASKCARD = "TASKCARD";
 	private Process process;
 	private View fragment;
+	RelativeLayout rl_MainStack, rl_MainStackTaskCard, rl_MainStackMsgCard, rl_SideStack,
+				   rl_SideStackTaskCard, rl_SideStackMsgCard, rl_TaskCard, rl_MsgCard;
+	
+	
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		fragment = inflater.inflate(R.layout.fragment_process, container, false);
 		
-		LinearLayout ll_Task = (LinearLayout) fragment.findViewById(R.id.LayoutWorkCard);
-		LinearLayout ll_Msg = (LinearLayout) fragment.findViewById(R.id.LayoutMsgCard);
-
-		LinearLayout ll_MainStack = (LinearLayout) fragment.findViewById(R.id.LayoutMainStack);
-		LinearLayout ll_SideStack = (LinearLayout) fragment.findViewById(R.id.LayoutSideStack);
+		rl_TaskCard = (RelativeLayout) fragment.findViewById(R.id.LayoutTaskCard);
+		rl_MsgCard = (RelativeLayout) fragment.findViewById(R.id.LayoutMsgCard);
+		
+		rl_MainStack = (RelativeLayout) fragment.findViewById(R.id.LayoutMainStack);
+		rl_MainStackTaskCard = (RelativeLayout) fragment.findViewById(R.id.LayoutMainStackTaskCard);
+		rl_MainStackMsgCard = (RelativeLayout) fragment.findViewById(R.id.LayoutMainStackMsgCard);		
+		
+		rl_SideStack = (RelativeLayout) fragment.findViewById(R.id.LayoutSideStack);
+		rl_SideStackTaskCard = (RelativeLayout) fragment.findViewById(R.id.LayoutSideStackTaskCard);
+		rl_SideStackMsgCard = (RelativeLayout) fragment.findViewById(R.id.LayoutSideStackMsgCard);
+		
 		ImageView iv_bin = (ImageView) fragment.findViewById(R.id.imageViewBin);
 
 		// set tag definitions
-		ll_Task.setTag(TASKCARD);
-		ll_Msg.setTag(MSGCARD);
-		ll_MainStack.setTag(MAINSTACK);
-		ll_SideStack.setTag(SIDESTACK);
+		rl_TaskCard.setTag(TASKCARD);
+		rl_MsgCard.setTag(MSGCARD);
+		rl_MainStack.setTag(MAINSTACK);
+		rl_SideStack.setTag(SIDESTACK);
 
 		// create a new process
 		process = new Process("my test process");
 
 		// set touch listeners
-		ll_Task.setOnTouchListener(new ChoiceTouchListener());
-		ll_Msg.setOnTouchListener(new ChoiceTouchListener());
+		rl_TaskCard.setOnTouchListener(new ChoiceTouchListener());
+		rl_MsgCard.setOnTouchListener(new ChoiceTouchListener());
 
 		// set drag listeners
-		ll_MainStack.setOnDragListener(new ChoiceDragListener());
+		rl_MainStack.setOnDragListener(new ChoiceDragListener());
 		iv_bin.setOnDragListener(new BinDragListener());
+		
+		updateView();
 		
 		return fragment;
 	}
@@ -115,10 +131,10 @@ public class ProcessFragment extends Fragment {
 
 				// get card (dragged element)
 				View view = (View) event.getLocalState();
-				LinearLayout dropElement = (LinearLayout) view;
+				RelativeLayout dropElement = (RelativeLayout) view;
 
 				// get the stack (drag target element)
-				LinearLayout targetElement = (LinearLayout) v;
+				RelativeLayout targetElement = (RelativeLayout) v;
 
 				// is this a card of a stack or a ney one?
 				String dropTag = (String) dropElement.getTag();
@@ -184,7 +200,7 @@ public class ProcessFragment extends Fragment {
 
 				// get card (dragged element)
 				View view = (View) event.getLocalState();
-				LinearLayout dropElement = (LinearLayout) view;
+				RelativeLayout dropElement = (RelativeLayout) view;
 
 				//todo: set question: do you really want to delete the card?
 				String dropTag = (String) dropElement.getTag();
@@ -219,41 +235,60 @@ public class ProcessFragment extends Fragment {
 		tv_processTitle.setText(process.getTitle());
 
 		// display main and side stack
-		TextView tv_mainstack = (TextView) fragment.findViewById(R.id.textViewMainStack);
-		TextView tv_sideStack = (TextView) fragment.findViewById(R.id.textViewSideStack);
+
+		TextView tv_Main = (TextView) fragment.findViewById(R.id.textViewMainStack);
+		TextView tv_Side = (TextView) fragment.findViewById(R.id.textViewSideStack);
 		
-		LinearLayout ll_MainStack = (LinearLayout) fragment.findViewById(R.id.LayoutMainStack);
-		LinearLayout ll_SideStack = (LinearLayout) fragment.findViewById(R.id.LayoutSideStack);
+		Card card = process.getTopCardMainStack();
+		if (card != null) {
 
-		if (process.isMainStackEmpty()) {
-
-			tv_mainstack.setText(R.string.emty_main_stack);
-			tv_mainstack.setBackgroundDrawable(getResources().getDrawable(
-					R.drawable.stack));
-			ll_MainStack.setOnTouchListener(new DoNothingTouchListener());
-			ll_SideStack.setOnDragListener(new DoNothinDragListener());
+			if(card.isMessage()) {
+				rl_MainStackTaskCard.setVisibility(View.INVISIBLE);
+				rl_MainStackMsgCard.setVisibility(View.VISIBLE);
+				tv_Main.setVisibility(View.INVISIBLE);
+			} else if(card.isTask()) {
+				rl_MainStackTaskCard.setVisibility(View.VISIBLE);
+				rl_MainStackMsgCard.setVisibility(View.INVISIBLE);
+				tv_Main.setVisibility(View.INVISIBLE);
+			} else {
+				//todo: error
+			}
+			
+			rl_MainStack.setOnTouchListener(new ChoiceTouchListener());
+			rl_SideStack.setOnDragListener(new ChoiceDragListener());			
+			
 		} else {
 
-			tv_mainstack.setText(process.getMainStackTitle());
-			tv_mainstack.setBackgroundDrawable(getResources().getDrawable(
-					R.drawable.message));
-			ll_MainStack.setOnTouchListener(new ChoiceTouchListener());
-			ll_SideStack.setOnDragListener(new ChoiceDragListener());
+			rl_MainStackTaskCard.setVisibility(View.INVISIBLE);
+			rl_MainStackMsgCard.setVisibility(View.INVISIBLE);
+			tv_Main.setVisibility(View.VISIBLE);			
+			rl_MainStack.setOnTouchListener(new DoNothingTouchListener());
+			rl_SideStack.setOnDragListener(new DoNothinDragListener());
 		}
+		
+		card = process.getTopCardSideStack();
+		if (card != null) {
 
-		if (process.isSideStackEmpty()) {
-
-			tv_sideStack.setText(R.string.emty_side_stack);
-			tv_sideStack.setBackgroundDrawable(getResources().getDrawable(
-					R.drawable.stack));
-			ll_SideStack.setOnTouchListener(new DoNothingTouchListener());
-
+			if(card.isMessage()) {
+				rl_SideStackTaskCard.setVisibility(View.INVISIBLE);
+				rl_SideStackMsgCard.setVisibility(View.VISIBLE);
+				tv_Side.setVisibility(View.INVISIBLE);
+			} else if(card.isTask()) {
+				rl_SideStackTaskCard.setVisibility(View.VISIBLE);
+				rl_SideStackMsgCard.setVisibility(View.INVISIBLE);
+				tv_Side.setVisibility(View.INVISIBLE);
+			} else {
+				//todo: error
+			}
+			
+			rl_SideStack.setOnTouchListener(new ChoiceTouchListener());	
+			
 		} else {
 
-			tv_sideStack.setText(process.getSideStackTitle());
-			tv_sideStack.setBackgroundDrawable(getResources().getDrawable(
-					R.drawable.message));
-			ll_SideStack.setOnTouchListener(new ChoiceTouchListener());
+			rl_SideStackTaskCard.setVisibility(View.INVISIBLE);
+			rl_SideStackMsgCard.setVisibility(View.INVISIBLE);
+			tv_Side.setVisibility(View.VISIBLE);			
+			rl_SideStack.setOnTouchListener(new DoNothingTouchListener());
 		}
 	}
 }
