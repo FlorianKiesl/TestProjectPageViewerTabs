@@ -54,13 +54,13 @@ public boolean removeCardFromSideStack() {
 	public boolean isMainStackEmpty() { return MainStack.size() == 0; }
 	public boolean isSideStackEmpty() { return SideStack.size() == 0; }
 	
-	public String getMainStackTitle() { 
-		if(isMainStackEmpty()) { return "???"; }
-		return MainStack.peek().getTitle();
+	public Card getTopCardMainStack() { 
+		if(isMainStackEmpty()) { return null; }
+		return MainStack.peek();
 	}
 	
-	public String getSideStackTitle() { 
-		if(isSideStackEmpty()) { return "???"; }
-		return SideStack.peek().getTitle();
+	public Card getTopCardSideStack() { 
+		if(isSideStackEmpty()) { return null; }
+		return SideStack.peek();
 	}
 }
