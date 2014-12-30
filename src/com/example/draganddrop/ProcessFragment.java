@@ -4,7 +4,6 @@ package com.example.draganddrop;
 import com.example.testprojectprocesstabs.R;
 
 import android.os.Bundle;
-import android.app.Activity;
 import android.content.ClipData;
 import android.support.v4.app.Fragment;
 import android.view.DragEvent;
