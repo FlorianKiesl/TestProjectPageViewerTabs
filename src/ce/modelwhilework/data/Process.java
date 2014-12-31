@@ -4,13 +4,13 @@ import java.util.Stack;
 
 public class Process extends Modus{
 
-	private Stack<Card>  MainStack, SideStack;
+	private Stack<Card>  mainStack, sideStack;
 	
 	public Process(String title) {
 		super(title);
 		
-		MainStack = new Stack<Card>();
-		SideStack = new Stack<Card>();		
+		mainStack = new Stack<Card>();
+		sideStack = new Stack<Card>();		
 	}
 	
 	public Process(String title, String mxlFilePath) {
@@ -18,12 +18,12 @@ public class Process extends Modus{
 		//todo: handle xml input
 	}
 	
-	public boolean addCard(Card card) { return MainStack.add(card);	}
+	public boolean addCard(Card card) { return mainStack.add(card);	}
 	
 	public boolean putCardAside() {
 		
 		try {
-			SideStack.add(MainStack.pop());			
+			sideStack.add(mainStack.pop());			
 		} catch (Exception e) {
 			return false;
 		}
@@ -32,35 +32,35 @@ public class Process extends Modus{
 	
 	public boolean putBackFromAside() {
 		
-		try { MainStack.add(SideStack.pop()); }
+		try { mainStack.add(sideStack.pop()); }
 		catch (Exception e) { return false;	}
 		return true;
 	}
 	
 	public boolean removeCardFromMainStack() {
 		
-		try { MainStack.pop();}
+		try { mainStack.pop();}
 		catch (Exception e) { return false;	}
 		return true;
 	}
 	
-public boolean removeCardFromSideStack() {
+	public boolean removeCardFromSideStack() {
 		
-		try { SideStack.pop();}
+		try { sideStack.pop();}
 		catch (Exception e) { return false;	}
 		return true;
 	}
 	
-	public boolean isMainStackEmpty() { return MainStack.size() == 0; }
-	public boolean isSideStackEmpty() { return SideStack.size() == 0; }
+	public boolean isMainStackEmpty() { return mainStack.size() == 0; }
+	public boolean isSideStackEmpty() { return sideStack.size() == 0; }
 	
 	public Card getTopCardMainStack() { 
 		if(isMainStackEmpty()) { return null; }
-		return MainStack.peek();
+		return mainStack.peek();
 	}
 	
 	public Card getTopCardSideStack() { 
 		if(isSideStackEmpty()) { return null; }
-		return SideStack.peek();
+		return sideStack.peek();
 	}
 }
