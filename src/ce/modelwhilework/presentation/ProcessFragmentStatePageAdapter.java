@@ -1,9 +1,7 @@
-package com.example.testprojectprocesstabs;
+package ce.modelwhilework.presentation;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import com.example.draganddrop.ProcessFragment;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -38,5 +36,20 @@ public class ProcessFragmentStatePageAdapter extends FragmentStatePagerAdapter {
 	public void addProcess(String name){
 		this.processList.add(name);
 	}
-
+	
+	public void openProcess(){
+		return;
+	}
+	
+	public void exportProcess(String name){
+		return;
+	}
+	
+	public void closeProcess(String name){
+		return;
+	}
+	
+	public void clossAllProcesses(){
+		return;
+	}
 }

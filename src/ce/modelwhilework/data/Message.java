@@ -1,4 +1,5 @@
-package com.example.draganddrop;
+package ce.modelwhilework.data;
+
 
 public class Message extends Card {
 

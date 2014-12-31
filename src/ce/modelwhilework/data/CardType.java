@@ -1,4 +1,4 @@
-package com.example.draganddrop;
+package ce.modelwhilework.data;
 
 enum CardType {
 	Task, Message;

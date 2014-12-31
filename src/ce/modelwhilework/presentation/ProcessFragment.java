@@ -1,8 +1,11 @@
-package com.example.draganddrop;
+package ce.modelwhilework.presentation;
 
 
 
-import com.example.testprojectprocesstabs.R;
+import ce.modelwhilework.data.Card;
+import ce.modelwhilework.data.Message;
+import ce.modelwhilework.data.Process;
+import ce.modelwhilework.data.Task;
 
 import android.opengl.Visibility;
 import android.os.Bundle;

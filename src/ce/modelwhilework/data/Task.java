@@ -1,8 +1,9 @@
-package com.example.draganddrop;
+package ce.modelwhilework.data;
+
 
 public class Task extends Card{
 
-	Task(String title) {
+	public Task(String title) {
 		super(title, CardType.Task);
 	}
 
